@@ -4,20 +4,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
-    private static SessionFactory instance = initSessionFactory();
+    private static SessionFactory sessionFactory = initSessionFactory();
 
-    public HibernateUtil() {
+    private HibernateUtil() {
     }
 
     private static SessionFactory initSessionFactory() {
         try {
             return new Configuration().configure().buildSessionFactory();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create SessionFactory", e);
+            throw new RuntimeException("Error creating session factory", e);
         }
     }
 
     public static SessionFactory getSessionFactory() {
-        return instance;
+        return sessionFactory;
     }
 }
