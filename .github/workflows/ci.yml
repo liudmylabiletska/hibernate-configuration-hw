@@ -5,7 +5,19 @@ on: [push, pull_request_target]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+      services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: WerMaLud123@@
+          MYSQL_DATABASE: ticket_app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
       - uses: actions/checkout@v2
         with:
@@ -27,4 +39,3 @@ jobs:
         if: ${{ github.event.pull_request && failure() }}
         with:
           github-token: ${{ github.token }}
-
