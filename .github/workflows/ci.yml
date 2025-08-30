@@ -1,38 +1,41 @@
 name: Java CI
 
-on: [push, pull_request_target]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-      services:
-        mysql:
-          image: mysql:5.7
-          env:
-            MYSQL_DATABASE: your_db_name
-            MYSQL_USER: your_db_user
-            MYSQL_PASSWORD: your_db_password
-            MYSQL_ROOT_PASSWORD: root_password
-          ports:
-            - 3306:3306
-          options: >-
-            --health-cmd="mysqladmin ping"
-            --health-interval=10s
-            --health-timeout=5s
-            --health-retries=3
-       steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+          MYSQL_ROOT_PASSWORD: rootpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
-          cache: maven
+          distribution: 'temurin'
+
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots -DskipTests=false verify
+        run: mvn -B package --file pom.xml
       - uses: mate-academy/auto-approve-action@v2
         if: ${{ github.event.pull_request && success() }}
         with:
