@@ -14,12 +14,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          env:
-            env:
-              MYSQL_DATABASE: ticket_app
-              MYSQL_USER: root
-              MYSQL_PASSWORD: WerMaLud123@@
-              MYSQL_ROOT_PASSWORD: WerMaLud123@@
+          MYSQL_DATABASE: ticket_app
+          MYSQL_USER: root
+          MYSQL_PASSWORD: WerMaLud123@@
+          MYSQL_ROOT_PASSWORD: WerMaLud123@@
         ports:
           - 3306:3306
         options: >-
@@ -35,7 +33,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - uses: mate-academy/auto-approve-action@v2
