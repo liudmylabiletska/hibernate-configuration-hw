@@ -2,13 +2,11 @@ package mate.academy.dao;
 
 import java.util.Optional;
 import mate.academy.exception.DataProcessingException;
-import mate.academy.lib.Dao;
 import mate.academy.model.Movie;
 import mate.academy.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-@Dao
 public class MovieDaoImpl implements MovieDao {
     @Override
     public Movie add(Movie movie) {
@@ -21,13 +19,9 @@ public class MovieDaoImpl implements MovieDao {
             return movie;
         } catch (Exception e) {
             if (transaction != null) {
-                try {
-                    transaction.rollback(); // 🔹 rollback zawsze wywołany, bez sprawdzania isActive
-                } catch (Exception rollbackEx) {
-                    // Można ewentualnie zalogować, ale test tego nie sprawdza
-                }
+                transaction.rollback();
             }
-            throw new DataProcessingException("Cannot save movie " + movie, e);
+            throw new DataProcessingException("Can't save movie", e);
         } finally {
             session.close();
         }
